@@ -32,3 +32,15 @@ def get_link_from_hot_trending() :
 
 
 get_link_from_hot_trending()
+
+# 봇커맨드
+# 기사사이트 종류 기사 > 입력하면 거기 내용이 나오는 것
+# 예를들어 IT뉴스 트렌드 기사 > get_link_from_hot_trending 나옴
+# IT뉴스 > IT뉴스 메인 기사
+
+# 봇 할일
+# 하루 x회 y시마다 자동 크롤링 하여 투고
+# 어디 뉴스 어디 기사를 얼만큼?
+
+# 쓰는 툴
+# 파이썬, Bs4, 슬랙API, heroku 아님 애저(서버용)
