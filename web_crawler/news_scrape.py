@@ -2,6 +2,7 @@ from urllib.request import urlopen
 from bs4 import BeautifulSoup
 import re
 from slacker import Slacker
+import requests
 
 # IT뉴스에서 IT기사를 크롤링
 it_news = urlopen("http://www.itnews.or.kr/")
@@ -9,6 +10,7 @@ it_news = urlopen("http://www.itnews.or.kr/")
 # okky 게시물을 크롤링
 okky = urlopen("https://okky.kr/")
 
+# 제이어쩌고 뉴스를 크롤링
 
 # 공통모듈
 
@@ -40,11 +42,18 @@ def get_link_from_hot_trending() :
 
 def get_link_from_okky() :
     okky_news = BeautifulSoup(okky, "html.parser")
-    for thing in okky_news.find() :
-        pass
+    for thing in okky_news.find_all("div", {"class":"article-middle-block"}) :
+        for h5 in thing.find_all("h5") :
+            for link in h5.find_all("a", href=True) :
+                
+                okky_url = "https://okky.kr"+link["href"]
+                okky_title = get_title_from_bs4(link)
 
-get_link_from_hot_trending()
-
+                print("가져온 제목", okky_title)
+                print("가져온 주소", okky_url)
+                
+# get_link_from_hot_trending()
+get_link_from_okky()
 
 # 봇 할일
 # 하루 x회 y시마다 자동 크롤링 하여 투고?
@@ -92,4 +101,8 @@ attachments.append({
     conda config --set ssl_verify false 로 ssl 기능을 꺼보세요...
 
 """
-slack.chat.post_message('#general', '봇 메시징 테스트', attachments=attachments)
+# requests.get('https://api.sidecar.io', verify = 'mycerts.pem')
+# 위 방법으로 할 시 mycerts.pem을 찾지 못했다 나옴
+
+# certificate verify failed (SSLERROR) 발생중
+# slack.chat.post_message('#general', '봇 메시징 테스트', attachments=attachments)
