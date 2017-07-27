@@ -10,7 +10,9 @@ it_news = urlopen("http://www.itnews.or.kr/")
 # okky 게시물을 크롤링
 okky = urlopen("https://okky.kr/")
 
-# 제이어쩌고 뉴스를 크롤링
+# ITWORLD에서 메인기사를 크롤링
+it_world = urlopen("http://www.itworld.co.kr/")
+
 
 # 공통모듈
 
@@ -25,6 +27,9 @@ def get_title_from_bs4(obj) :
 ## IT뉴스에서 지금 트렌드 중인 기사 크롤링 하기
 
 def get_link_from_hot_trending() :
+    
+    print("IT NEWS")
+    
     hot_trending = BeautifulSoup(it_news, "html.parser")
     for thing in hot_trending.find("div", {"class":"td-trending-now-wrapper"}).children:
         for link in thing.find_all("a", href=True) :
@@ -41,6 +46,9 @@ def get_link_from_hot_trending() :
 ## okky 에서 좋은 글들을 크롤링 하기
 
 def get_link_from_okky() :
+    
+    print("OKKY TECH")
+    
     okky_news = BeautifulSoup(okky, "html.parser")
     for thing in okky_news.find_all("div", {"class":"article-middle-block"}) :
         for h5 in thing.find_all("h5") :
@@ -51,9 +59,26 @@ def get_link_from_okky() :
 
                 print("가져온 제목", okky_title)
                 print("가져온 주소", okky_url)
+
+## ITNEWS 에서 메인 기사들을 크롤링 하기
+
+
+def get_link_from_itworld():
+    print("ITWORLD")
+    
+    world_news = BeautifulSoup(it_world, "html.parser")
+    for thing in world_news.find_all("div", {"class": "headline_news_contents"}):
+        for link in thing.find_all("a", href=True) :
+            world_url = "http://www.itworld.co.kr" + link["href"]
+            world_title = get_title_from_bs4(link)
+    
+            print("가져온 제목", world_title)
+            print("가져온 주소", world_url)
                 
-# get_link_from_hot_trending()
+get_link_from_hot_trending()
 get_link_from_okky()
+get_link_from_itworld()
+
 
 # 봇 할일
 # 하루 x회 y시마다 자동 크롤링 하여 투고?
@@ -99,7 +124,6 @@ attachments.append({
     conda install certifi
     conda update --all 로 certifi 업데이트 해보시고
     conda config --set ssl_verify false 로 ssl 기능을 꺼보세요...
-
 """
 # requests.get('https://api.sidecar.io', verify = 'mycerts.pem')
 # 위 방법으로 할 시 mycerts.pem을 찾지 못했다 나옴
